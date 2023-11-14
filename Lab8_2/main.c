@@ -13,6 +13,10 @@ typedef struct Node {
 // Функция для создания нового узла списка
 Node *createNode(const char *word) {
     Node *newNode = (Node *)malloc(sizeof(Node));
+    if (newNode == NULL) {
+        fprintf(stderr, "Ошибка при выделении памяти для узла\n");
+        exit(EXIT_FAILURE);
+    }
     strcpy(newNode->word, word);
     newNode->next = NULL;
     return newNode;
@@ -27,12 +31,19 @@ Node *prepend(Node *head, const char *word) {
 
 // Функция для проверки, начинается ли слово с гласной буквы
 int startsWithVowel(const char *word) {
+    if (word[0] == '\0') {
+        return 0; // Слово пустое
+    }
     char firstChar = tolower(word[0]);
     return (firstChar == 'a' || firstChar == 'e' || firstChar == 'i' || firstChar == 'o' || firstChar == 'u');
 }
 
 // Функция для вывода списка в консоль
 void printList(Node *head) {
+    if (head == NULL) {
+        printf("Список пуст\n");
+        return;
+    }
     Node *current = head;
     while (current != NULL) {
         printf("%s ", current->word);

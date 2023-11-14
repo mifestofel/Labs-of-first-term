@@ -44,7 +44,10 @@ int main() {
         printf("6. Вывести базу на экран\n");
         printf("7. Выйти\n");
         printf("Выберите действие (1-7): ");
-        scanf("%d", &choice);
+        if (scanf("%d", &choice) != 1) {
+            printf("Ошибка ввода. Пожалуйста, введите целое число.\n");
+            exit(1);
+        }
 
         switch (choice) {
             case 1:
@@ -202,14 +205,29 @@ void printDatabase() {
 DBRecord readDBRecordFromUser() {
     DBRecord record;
     printf("Введите ФИО: ");
-    scanf(" %[^\n]s", record.name);
+    if (scanf(" %[^\n]s", record.name) != 1) {
+        printf("Ошибка ввода ФИО.\n");
+        exit(1);
+    }
     printf("Введите название клуба: ");
-    scanf(" %[^\n]s", record.club);
+    if (scanf(" %[^\n]s", record.club) != 1) {
+        printf("Ошибка ввода названия клуба.\n");
+        exit(1);
+    }
     printf("Введите возраст: ");
-    scanf("%d", &record.age);
+    if (scanf("%d", &record.age) != 1) {
+        printf("Ошибка ввода возраста.\n");
+        exit(1);
+    }
     printf("Введите количество матчей, проведенных за сборную: ");
-    scanf("%d", &record.matches);
+    if (scanf("%d", &record.matches) != 1) {
+        printf("Ошибка ввода количества матчей.\n");
+        exit(1);
+    }
     printf("Введите количество забитых за сборную мячей: ");
-    scanf("%d", &record.goals);
+    if (scanf("%d", &record.goals) != 1) {
+        printf("Ошибка ввода количества забитых мячей.\n");
+        exit(1);
+    }
     return record;
 }

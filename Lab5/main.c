@@ -54,8 +54,21 @@ int main() {
     // Чтение строк из файла f и удаление пробелов в начале и конце
     while (fgets(buffer, MAX_LINE_LENGTH, file_f) != NULL) {
         trim(buffer);
+
+        // Проверка длины строки перед добавлением в массив
+        if (strlen(buffer) >= MAX_LINE_LENGTH) {
+            fprintf(stderr, "Ошибка: строка слишком длинная.\n");
+            return 1;
+        }
+
         lines[num_lines] = strdup(buffer);  // Копируем строку в динамический буфер
         num_lines++;
+
+        // Проверка на превышение максимального количества строк
+        if (num_lines >= MAX_LINE_LENGTH) {
+            fprintf(stderr, "Ошибка: превышено максимальное количество строк.\n");
+            return 1;
+        }
     }
 
     fclose(file_f);

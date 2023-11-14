@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <windows.h>
 
+#define MAX_LINE_LENGTH 1000
+
 // Функция для нахождения наименьшего значения в файле
 double findMinValue(FILE *file) {
     double minValue;
@@ -50,6 +52,7 @@ int main() {
 
     if (tempFile == NULL) {
         perror("Ошибка при создании временного файла");
+        fclose(file);
         return 1;
     }
 
@@ -58,7 +61,9 @@ int main() {
     double firstValue;
     if (fscanf(file, "%lf", &firstValue) != 1) {
         perror("Ошибка при чтении первого значения из файла");
-        exit(1);
+        fclose(file);
+        fclose(tempFile);
+        return 1;
     }
 
     while (!feof(file)) {
@@ -77,7 +82,10 @@ int main() {
     fclose(tempFile);
 
     // Удаляем существующий файл "f.txt"
-    remove("f.txt");
+    if (remove("f.txt") != 0) {
+        perror("Ошибка при удалении файла");
+        return 1;
+    }
 
     // Заменяем файл "f.txt" содержимым временного файла "temp.txt"
     if (rename("temp.txt", "f.txt") != 0) {

@@ -1,39 +1,42 @@
 #include <stdio.h>
 #include <windows.h>
 
-// Введем "макросы" - константы - для более легкой реализации массива
 #define MAX_ROWS 10
 #define MAX_COLS 10
 
-// Функция для формирования исходной матрицы
 void createMatrix(int matrix[MAX_ROWS][MAX_COLS], int m, int n) {
     printf("Введите элементы матрицы %d x %d:\n", m, n);
     for (int i = 0; i < m; i++) {
         for (int j = 0; j < n; j++) {
             printf("matrix[%d][%d]: ", i, j);
-            scanf("%d", &matrix[i][j]); // Считываем элемент матрицы с клавиатуры
+            if (scanf("%d", &matrix[i][j]) != 1) {
+                printf("Ошибка ввода. Введите целое число.\n");
+                exit(EXIT_FAILURE);
+            }
         }
     }
 }
 
-// Функция для вывода исходной матрицы
 void printMatrix(int matrix[MAX_ROWS][MAX_COLS], int m, int n) {
     printf("Исходная матрица %d x %d:\n", m, n);
     for (int i = 0; i < m; i++) {
         for (int j = 0; j < n; j++) {
-            printf("%d\t", matrix[i][j]); // Выводим элементы матрицы на экран
+            printf("%d\t", matrix[i][j]);
         }
         printf("\n");
     }
 }
 
-// Функция для вычисления суммы элементов в столбце с наибольшим количеством элементов, превышающих среднее арифметическое
 int sumOfColumnWithMostAboveAverage(int matrix[MAX_ROWS][MAX_COLS], int m, int n) {
-    int maxColumnIndex = 0; // Индекс столбца с максимальным количеством элементов, превышающих среднее арифметическое
-    int maxCount = 0; // Максимальное количество элементов, превышающих среднее арифметическое
-    double average = 0.0; // Среднее арифметическое элементов матрицы
+    if (m <= 0 || n <= 0) {
+        printf("Ошибка: Некорректные размеры матрицы.\n");
+        exit(EXIT_FAILURE);
+    }
 
-    // Вычисляем среднее арифметическое элементов матрицы
+    int maxColumnIndex = 0;
+    int maxCount = 0;
+    double average = 0.0;
+
     for (int i = 0; i < m; i++) {
         for (int j = 0; j < n; j++) {
             average += matrix[i][j];
@@ -41,9 +44,8 @@ int sumOfColumnWithMostAboveAverage(int matrix[MAX_ROWS][MAX_COLS], int m, int n
     }
     average /= (m * n);
 
-    // Находим столбец с максимальным количеством элементов, превышающих среднее арифметическое
     for (int j = 0; j < n; j++) {
-        int count = 0; // Количество элементов в текущем столбце, превышающих среднее арифметическое
+        int count = 0;
         for (int i = 0; i < m; i++) {
             if (matrix[i][j] > average) {
                 count++;
@@ -55,7 +57,6 @@ int sumOfColumnWithMostAboveAverage(int matrix[MAX_ROWS][MAX_COLS], int m, int n
         }
     }
 
-    // Вычисляем сумму элементов в найденном столбце
     int sum = 0;
     for (int i = 0; i < m; i++) {
         sum += matrix[i][maxColumnIndex];
@@ -67,14 +68,30 @@ int sumOfColumnWithMostAboveAverage(int matrix[MAX_ROWS][MAX_COLS], int m, int n
 int main() {
     SetConsoleOutputCP(CP_UTF8);
     int m, n;
+
     printf("Введите количество строк матрицы (m): ");
-    scanf("%d", &m);
+    if (scanf("%d", &m) != 1 || m <= 0) {
+        printf("Ошибка ввода. Введите положительное целое число.\n");
+        return EXIT_FAILURE;
+    }
+
     printf("Введите количество столбцов матрицы (n): ");
-    scanf("%d", &n);
+    if (scanf("%d", &n) != 1 || n <= 0) {
+        printf("Ошибка ввода. Введите положительное целое число.\n");
+        return EXIT_FAILURE;
+    }
+
+    if (m > MAX_ROWS || n > MAX_COLS) {
+        printf("Ошибка: Превышены максимальные размеры матрицы.\n");
+        return EXIT_FAILURE;
+    }
+
     int matrix[MAX_ROWS][MAX_COLS];
     createMatrix(matrix, m, n);
     printMatrix(matrix, m, n);
+
     int result = sumOfColumnWithMostAboveAverage(matrix, m, n);
     printf("Сумма элементов в столбце с наибольшим количеством элементов, превышающих среднее арифметическое: %d\n", result);
 
-    return 0;}
+    return EXIT_SUCCESS;
+}
